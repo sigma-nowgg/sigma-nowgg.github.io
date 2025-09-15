@@ -2,268 +2,245 @@
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
-  <title>NowGG Cloud — Sigma</title>
+  <title>NowGG Cloud</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> 
   <style>
-    :root{
-      --accent:#00ffcc;--accent-dark:#00ff66;--bg1:#0f172a;--bg2:#6b21a8;--bg3:#b91c1c;
-    }
+    :root{--accent:#00ffcc;--accent-dark:#00ff66;--bg1:#1a2a6c;--bg2:#b21f1f;--bg3:#fdbb2d}
     *{box-sizing:border-box}
-    body{
-      margin:0;font-family:'Roboto',sans-serif;
-      background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
-      background-size:300% 300%;animation:grad 12s ease infinite;color:#fff;
-      min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
-    }
+    body{margin:0;font-family:'Roboto',sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));background-size:300% 300%;animation:grad 12s ease infinite;color:#fff;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
     @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-    .card{width:360px;background:rgba(0,0,0,0.55);padding:26px;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,0.6);text-align:center}
-    h1{margin:0 0 8px;font-size:20px;color:var(--accent);text-shadow:0 0 8px var(--accent)}
-    p.lead{margin:6px 0 18px;color:#ddd;font-size:14px}
-    input[type="text"]{width:100%;padding:12px;border-radius:10px;border:none;background:#0b0b0b;color:#fff;outline:none;text-align:center;box-shadow:inset 0 0 10px rgba(0,0,0,0.6);margin-bottom:12px}
-    .btn{display:inline-block;padding:11px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700;margin:6px 6px;transition:transform .14s,box-shadow .14s}
+    .card{width:340px;background:rgba(0,0,0,0.6);padding:28px;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.6),0 0 30px rgba(0,0,0,0.2) inset;text-align:center}
+    h1{margin:0 0 10px;font-size:20px;color:var(--accent);text-shadow:0 0 8px var(--accent)}
+    input[type="password"]{width:100%;padding:12px;border-radius:10px;border:none;background:#111;color:#fff;outline:none;text-align:center;box-shadow:0 0 10px rgba(0,0,0,0.6) inset;margin-bottom:12px}
+    .btn{width:100%;padding:12px;border-radius:10px;border:none;cursor:pointer;font-weight:700;margin-top:8px;transition:transform .18s,box-shadow .18s}
     .btn:active{transform:translateY(1px)}
-    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-dark));color:#000}
-    .btn-amber{background:linear-gradient(90deg,#ffcc00,#ff6600);color:#111}
-    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.08);color:#fff}
-    .msg{margin-top:12px;font-size:0.95rem;min-height:28px}
-    .desktop{display:none;flex-direction:column;align-items:center;gap:12px;width:100%;padding-top:6px}
-    #keyTimer{font-size:0.95rem;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04)}
-    #adminBadge{margin-top:8px;font-size:0.95rem;color:#ffd166;text-shadow:0 0 8px #ffd166;display:none}
-    .icons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-    .icon{width:88px;text-align:center;cursor:pointer}
-    .icon img{width:64px;height:64px;border-radius:10px;background:#fff;padding:6px}
-    #topbar{position:fixed;top:0;left:0;width:100%;height:52px;background:rgba(0,0,0,0.8);display:none;align-items:center;justify-content:flex-end;padding-right:12px;z-index:40}
-    #topbar button{background:#ff4d4d;border:none;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer}
-    iframe{position:fixed;top:52px;left:0;width:100%;height:calc(100% - 52px);border:none;display:none;z-index:35}
-    .small{font-size:13px;color:#cfcfcf}
-    @media (max-width:420px){.card{width:94%}.icon img{width:56px;height:56px}}
+    .confirm{background:linear-gradient(90deg,var(--accent),var(--accent-dark));color:#000}
+    .getkey{background:linear-gradient(90deg,#ffcc00,#ff6600);color:#111}
+    .msg{margin-top:12px;font-size:0.95rem;min-height:22px}
+    .desktop{display:none;flex-direction:column;align-items:center;gap:18px;width:100%;height:100%;padding:20px}
+    #keyTimer{font-size:1rem;padding:8px 14px;border-radius:10px;background:rgba(0,0,0,0.45)}
+    #adminBadge{margin-top:10px;font-size:1rem;color:#ffcc00;text-shadow:0 0 10px #ffcc00;display:none}
+    .icons{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+    .icon{width:100px;text-align:center;cursor:pointer}
+    .icon img{width:80px;height:80px;transition:transform .25s}
+    .icon:hover img{transform:scale(1.14)}
+    #topbar{position:fixed;top:0;left:0;width:100%;height:44px;background:#000;display:none;align-items:center;justify-content:flex-end;padding-right:12px;z-index:50}
+    #topbar button{background:#ff4d4d;border:none;color:#fff;padding:6px 10px;border-radius:8px;cursor:pointer}
+    iframe{position:fixed;top:44px;left:0;width:100%;height:calc(100% - 44px);border:none;display:none;z-index:40}
+    .snowflake{position:fixed;top:-10px;width:6px;height:6px;background:#fff;border-radius:50%;opacity:.85;pointer-events:none;animation:fall linear infinite}
+    @keyframes fall{0%{transform:translateY(0)}100%{transform:translateY(110vh) translateX(50px)}}
+    @media (max-width:420px){.card{width:92%}.icon{width:80px}.icon img{width:64px;height:64px}}
   </style>
 </head>
 <body>
+  <!-- Login -->
   <div class="card" id="loginCard">
-    <h1>🔐 NowGG Cloud — Sigma</h1>
-    <p class="lead">Nhấn "Vượt link" để được cấp quyền truy cập. Sau khi hoàn thành bên Link4m, bạn sẽ được chuyển về đây.</p>
-
-    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-      <button class="btn btn-amber" onclick="goLink()">🚀 Vượt link</button>
-      <button class="btn btn-primary" onclick="manualCodePrompt()">🔁 Có mã? Dán mã</button>
-      <button class="btn btn-ghost" onclick="openGuide()">📖 HDSD</button>
-    </div>
-
-    <div class="msg" id="statusMsg"></div>
-    <div style="margin-top:10px" class="small">Lưu ý: Link3rd-party sẽ xử lý quá trình và phải redirect lại với <code>?code=XYZ</code> để xác thực.</div>
+    <h1>🔐 NowGG Cloud</h1>
+    <p style="margin:6px 0 16px;color:#ddd">Nhập key để truy cập</p>
+    <input id="keyInput" type="password" placeholder="Nhập key..." autocomplete="off" />
+    <button class="btn confirm" onclick="checkKey()">Xác nhận</button>
+    <button class="btn getkey" onclick="copyKeyLink()">Lấy Key</button>
+    <div class="msg" id="error"></div>
   </div>
 
+  <!-- Desktop -->
   <div class="card desktop" id="desktop">
     <h1 style="font-size:18px;color:var(--accent)">NowGG Cloud — Dashboard</h1>
-    <div id="keyTimer">⏳ Trạng thái: chưa xác thực</div>
+    <div id="keyTimer">⏳ Key còn lại: --:--:--</div>
     <div id="adminBadge">🔒 Admin Mode</div>
-    <div class="icons" style="margin-top:12px">
+    <div class="icons">
       <div class="icon" onclick="openApp()">
         <img src="https://cms-cdn.now.gg/cms-media/2022/12/nowgg-full-logo.png" alt="App">
-        <div class="small">Mở App</div>
+        <div>Ko lỗi app</div>
       </div>
-      <div class="icon" onclick="openGuide()">
+      <div class="icon" onclick="copyGuideLink()">
         <img src="https://cdn-icons-png.flaticon.com/512/1828/1828859.png" alt="guide">
-        <div class="small">HDSD</div>
+        <div>HDSD</div>
       </div>
       <div class="icon" onclick="openUpdate()">
         <img src="https://png.pngtree.com/png-clipart/20230508/original/pngtree-sticky-note-flat-icon-png-image_9150666.png" alt="update">
-        <div class="small">Update</div>
+        <div>Update</div>
+      </div>
+      <div class="icon" onclick="openVIP()">
+        <img src="https://cdn-icons-png.flaticon.com/512/6701/6701712.png" alt="vip">
+        <div>VIP</div>
       </div>
       <div class="icon" onclick="logout()">
         <img src="https://cdn-icons-png.flaticon.com/512/1828/1828490.png" alt="logout">
-        <div class="small">Đăng xuất</div>
+        <div>Đăng xuất</div>
       </div>
     </div>
   </div>
 
+  <!-- App -->
   <div id="topbar"><button onclick="closeApp()">Đóng</button></div>
   <iframe id="appFrame" src=""></iframe>
 
-  <!-- Update Modal -->
+  <!-- Modal Update -->
   <div id="updateModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-    background:rgba(0,0,0,0.75);z-index:60;align-items:center;justify-content:center;">
-    <div style="background:#111;padding:18px;border-radius:12px;max-width:420px;width:92%;color:#fff;box-shadow:0 6px 24px rgba(0,0,0,0.6);">
-      <h3 style="margin:0 0 8px;color:#00ffcc;text-align:center">📢 Cập nhật mới</h3>
-      <ul style="text-align:left;line-height:1.6;color:#ddd">
-        <li>⚡ Tối ưu hiệu năng app.</li>
-        <li>🔒 Bổ sung kiểm tra server-side.</li>
-        <li>🛠️ Fix một số lỗi UI nhỏ.</li>
+    background:rgba(0,0,0,0.7);z-index:100;align-items:center;justify-content:center;">
+    <div style="background:#222;padding:20px;border-radius:14px;max-width:360px;width:90%;color:#fff;box-shadow:0 6px 24px rgba(0,0,0,0.6);">
+      <h2 style="margin-top:0;color:#00ffcc;text-align:center;">📢 Cập nhật mới</h2>
+      <ul style="text-align:left;line-height:1.6;">
+        <li>⚡ Tối ưu hiệu năng khi chạy app.</li>
+        <li>🎨 Thêm giao diện nền động mới.</li>
+        <li>🔒 Cải thiện bảo mật key.</li>
       </ul>
-      <div style="display:flex;gap:10px;margin-top:12px">
-        <button onclick="closeUpdate()" style="flex:1;padding:10px;border-radius:8px;border:none;background:#00ffcc;color:#000;font-weight:700;cursor:pointer">Đóng</button>
-      </div>
+      <button onclick="closeUpdate()" style="margin-top:12px;width:100%;padding:10px;border:none;border-radius:10px;background:#00ffcc;color:#000;font-weight:bold;cursor:pointer;">
+        Đóng
+      </button>
     </div>
   </div>
 
 <script>
-/*
-  Frontend index.html cho GitHub Pages (repo: sigma-nowgg.github.io)
-  Server URL: https://nowgg-server.onrender.com
-*/
+(function(){
+  const _0xA1="ilovead"; // key admin
+  const _0xA2=48*60*60*1000; // 2 ngày
+  let _0xA3=null;
 
-const SERVER_URL = "https://nowgg-server.onrender.com";
-const LINK4M = "https://link4m.com/Xi9JlT";
-const VISITED_FLAG = "sigma_nowgg_visitedLink";
-const VISITED_TIME = "sigma_nowgg_visitedLinkTime";
-const STATUS = document.getElementById("statusMsg");
+  // Redirect sang link4m mới
+  window.copyKeyLink=function(){
+    localStorage.setItem("visitedLink","true");
+    window.location.href="https://link4m.com/qIzP1";
+  };
 
-function setStatus(txt, cls){
-  STATUS.textContent = txt;
-  if(cls) STATUS.className = cls;
-}
+  window.checkKey=function(){
+    let i=document.getElementById("keyInput").value.trim();
+    let k=localStorage.getItem("myKey");
+    let t=localStorage.getItem("myKeyTime");
+    let e=document.getElementById("error");
+    let n=Date.now();
 
-// Redirect user to link4m and set flag
-function goLink(){
-  try {
-    localStorage.setItem(VISITED_FLAG, "true");
-    localStorage.setItem(VISITED_TIME, Date.now().toString());
-    // Redirect to link4m; expecting link4m to redirect back to this page with ?code=XYZ
-    window.location.href = LINK4M;
-  } catch(e){
-    setStatus("❌ Không thể lưu flag localStorage. Hãy copy link thủ công: " + LINK4M);
-  }
-}
-
-// If user has a code (e.g. pasted), allow manual input
-function manualCodePrompt(){
-  const code = prompt("Dán mã (code) bạn nhận được từ link4m vào đây:");
-  if(!code) return;
-  setStatus("⏳ Đang gửi mã tới server...");
-  issueCodeToServer(code);
-}
-
-// Open guide (copy link)
-function openGuide(){
-  const yt = "https://www.youtube.com/watch?v=ZL2YvVOToBw";
-  navigator.clipboard.writeText(yt).then(()=>{ alert("📋 Link hướng dẫn đã được copy!"); }).catch(()=>{ alert("❌ Không copy được, hãy copy thủ công: " + yt); });
-}
-
-// Open update modal
-function openUpdate(){ document.getElementById("updateModal").style.display = "flex"; }
-function closeUpdate(){ document.getElementById("updateModal").style.display = "none"; }
-
-// Send code to server /issue to set HttpOnly cookie
-async function issueCodeToServer(code){
-  try {
-    const resp = await fetch(SERVER_URL + "/issue", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({ code }),
-      credentials: "include" // important: to receive HttpOnly cookie set by server
-    });
-    if(!resp.ok){
-      const t = await resp.text().catch(()=>null);
-      setStatus("❌ Server trả lỗi: " + (t || resp.status));
+    if(i===_0xA1){
+      localStorage.setItem("isLoggedIn","true");
+      localStorage.setItem("isAdmin","true");
+      document.getElementById("loginCard").style.display="none";
+      document.getElementById("desktop").style.display="flex";
+      document.getElementById("adminBadge").style.display="block";
+      e.textContent="✅ Đăng nhập admin thành công!";
       return;
     }
-    const data = await resp.json().catch(()=> ({}));
-    if(data && data.ok){
-      setStatus("✅ Xác thực thành công — mở dashboard...");
-      // mở dashboard từ server (cookie sẽ kèm theo)
-      setTimeout(()=>{ openApp(true); }, 700);
-    } else {
-      setStatus("❌ Xác thực thất bại.");
-    }
-  } catch(e){
-    console.error(e);
-    setStatus("❌ Lỗi kết nối tới server.");
-  }
-}
 
-// On load: detect code param and visited flag
-async function handleReturnFromLink(){
-  // Snowflake visual isn't required here; minimal.
-  const params = new URLSearchParams(window.location.search);
-  const code = params.get("code");
-  const visited = localStorage.getItem(VISITED_FLAG);
-  const visitedTime = parseInt(localStorage.getItem(VISITED_TIME) || "0", 10);
-  const MAX_RETURN_MS = 24 * 3600 * 1000; // chỉ chấp nhận flag trong 24h (tùy chỉnh)
-
-  // If code present AND flag exists (to ensure user clicked Vượt link earlier)
-  if(code && visited === "true"){
-    // optional: check time window
-    if(Date.now() - visitedTime > MAX_RETURN_MS){
-      setStatus("⚠️ Thời gian quay lại quá lâu. Hãy bấm 'Vượt link' lại.");
-      localStorage.removeItem(VISITED_FLAG);
-      localStorage.removeItem(VISITED_TIME);
+    if(!k||!t){
+      e.textContent="❌ Bạn chưa có key. Hãy lấy key từ Link4m.";
       return;
     }
-    setStatus("⏳ Đang xác thực code từ link4m...");
-    // send to server
-    await issueCodeToServer(code);
-    // remove params from URL (clean)
-    try {
-      const url = new URL(window.location.href);
-      url.search = "";
-      window.history.replaceState({}, document.title, url.toString());
-    } catch(e){}
-    localStorage.removeItem(VISITED_FLAG);
-    localStorage.removeItem(VISITED_TIME);
-    return;
+    if(n-parseInt(t)>_0xA2){
+      e.textContent="⏳ Key đã hết hạn. Vui lòng lấy key mới.";
+      localStorage.clear();return;
+    }
+    if(i===k){
+      localStorage.setItem("isLoggedIn","true");
+      localStorage.removeItem("isAdmin");
+      document.getElementById("loginCard").style.display="none";
+      document.getElementById("desktop").style.display="flex";
+      _0xA4(parseInt(t));
+    }else{
+      e.textContent="❌ Key sai!";
+    }
+  };
+
+  function _0xA4(t){
+    clearInterval(_0xA3);
+    _0xA3=setInterval(()=>{
+      let n=Date.now();
+      let r=_0xA2-(n-t);
+      if(r<=0){
+        document.getElementById("keyTimer").textContent="⏳ Key đã hết hạn";
+        window.logout();
+      }else{
+        let h=String(Math.floor(r/3600000)).padStart(2,"0");
+        let m=String(Math.floor((r%3600000)/60000)).padStart(2,"0");
+        let s=String(Math.floor((r%60000)/1000)).padStart(2,"0");
+        document.getElementById("keyTimer").textContent=`⏳ Key còn lại: ${h}:${m}:${s}`;
+      }
+    },1000);
   }
 
-  // If no code but visited flag present (user clicked Vượt link but returned without code)
-  if(!code && visited === "true"){
-    setStatus("⚠️ Bạn đã bấm 'Vượt link' nhưng không có mã trả về. Hãy kiểm tra quá trình trên link4m hoặc bấm 'Vượt link' lại.");
-    // keep flag for a short time in case user retries
-    setTimeout(()=>{}, 0);
-    return;
-  }
+  window.logout=function(){
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("isAdmin");
+    document.getElementById("desktop").style.display="none";
+    document.getElementById("loginCard").style.display="block";
+    clearInterval(_0xA3);
+  };
 
-  // Otherwise normal entry
-  setStatus("");
-}
+  // ✅ iframe uProxy
+  window.openApp=function(){
+    const f=document.getElementById("appFrame");
+    f.src="https://uproxy.online/ultraviolet/hvtrs8%2F-nmw%2Cge%2Fcprs-cnuqtgr%2Filc-9355%2Falwsvep.jtol";
+    f.style.display="block";
+    document.getElementById("topbar").style.display="flex";
+  };
 
-// Open the dashboard/app in iframe. If fromServer === true then open server /app; else open your own iframe (fallback)
-function openApp(fromServer=false){
-  const f = document.getElementById("appFrame");
-  if(fromServer){
-    f.src = SERVER_URL + "/app";
-  } else {
-    // fallback (if you want open a proxy link)
-    f.src = "https://uproxy.online/ultraviolet/hvtrs8%2F-nmw%2Cge%2Fcprs-cnuqtgr%2Filc-9355%2Falwsvep.jtol";
-  }
-  f.style.display = "block";
-  document.getElementById("topbar").style.display = "flex";
-  document.getElementById("loginCard").style.display = "none";
-  document.getElementById("desktop").style.display = "flex";
-  document.getElementById("keyTimer").textContent = "⏳ Đang truy cập dashboard";
-  document.getElementById("adminBadge").style.display = "none";
-}
+  window.closeApp=function(){
+    const f=document.getElementById("appFrame");
+    f.src="";
+    f.style.display="none";
+    document.getElementById("topbar").style.display="none";
+  };
 
-// Close app iframe
-function closeApp(){
-  document.getElementById("appFrame").src = "";
-  document.getElementById("appFrame").style.display = "none";
-  document.getElementById("topbar").style.display = "none";
-  // show desktop or login again based on state
-  document.getElementById("desktop").style.display = "flex";
-}
+  window.copyGuideLink=function(){
+    const yt="https://www.youtube.com/watch?v=ZL2YvVOToBw";
+    navigator.clipboard.writeText(yt).then(()=>{alert("📋 Link hướng dẫn đã được copy!");});
+  };
 
-// Logout: call server /logout to clear cookie and revert to login UI
-async function logout(){
-  try {
-    const resp = await fetch(SERVER_URL + "/logout", {
-      method: "POST",
-      credentials: "include"
-    });
-    // ignore response, just reset UI
-  } catch(e){
-    console.warn("logout error", e);
-  }
-  closeApp();
-  document.getElementById("desktop").style.display = "none";
-  document.getElementById("loginCard").style.display = "block";
-  setStatus("✅ Đã đăng xuất.");
-}
+  window.openUpdate=function(){document.getElementById("updateModal").style.display="flex";}
+  window.closeUpdate=function(){document.getElementById("updateModal").style.display="none";}
 
-// On initial load
-window.addEventListener("DOMContentLoaded", async () => {
-  await handleReturnFromLink();
-});
+  window.openVIP=function(){alert("🚧 VIP đang phát triển");}
+
+  // Khi load trang, check nếu vừa vượt link4m về
+  window.onload=()=>{
+    const params=new URLSearchParams(window.location.search);
+    const code=params.get("code");
+    const visited=localStorage.getItem("visitedLink");
+    const k=localStorage.getItem("myKey");
+    const t=localStorage.getItem("myKeyTime");
+    const l=localStorage.getItem("isLoggedIn");
+    const a=localStorage.getItem("isAdmin");
+    const n=Date.now();
+
+    if(code && visited==="true"){
+      localStorage.removeItem("visitedLink");
+      // giả lập set key sau khi vượt link
+      localStorage.setItem("myKey","demoKey");
+      localStorage.setItem("myKeyTime",Date.now().toString());
+      localStorage.setItem("isLoggedIn","true");
+      document.getElementById("loginCard").style.display="none";
+      document.getElementById("desktop").style.display="flex";
+      _0xA4(Date.now());
+      window.history.replaceState({},document.title,window.location.pathname);
+      return;
+    }
+
+    if(a==="true"&&l==="true"){
+      document.getElementById("loginCard").style.display="none";
+      document.getElementById("desktop").style.display="flex";
+      document.getElementById("adminBadge").style.display="block";
+      return;
+    }
+    if(k&&t&&l==="true"){
+      if(n-parseInt(t)<_0xA2){
+        document.getElementById("loginCard").style.display="none";
+        document.getElementById("desktop").style.display="flex";
+        _0xA4(parseInt(t));
+      }else{localStorage.clear();}
+    }
+    setInterval(()=>{
+      const s=document.createElement("div");
+      s.className="snowflake";
+      s.style.left=Math.random()*window.innerWidth+"px";
+      const z=2+Math.random()*6;
+      s.style.width=s.style.height=z+"px";
+      s.style.opacity=(0.3+Math.random()*0.7).toString();
+      s.style.animationDuration=(2+Math.random()*4)+"s";
+      document.body.appendChild(s);
+      setTimeout(()=>s.remove(),7000);
+    },200);
+  };
+})();
 </script>
 </body>
 </html>
