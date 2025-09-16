@@ -20,7 +20,6 @@
     .msg{margin-top:12px;font-size:0.95rem;min-height:22px}
     .desktop{display:none;flex-direction:column;align-items:center;gap:18px;width:100%;height:100%;padding:20px}
     #keyTimer{font-size:1rem;padding:8px 14px;border-radius:10px;background:rgba(0,0,0,0.45)}
-    #adminBadge{margin-top:10px;font-size:1rem;color:#ffcc00;text-shadow:0 0 10px #ffcc00;display:none}
     .icons{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
     .icon{width:100px;text-align:center;cursor:pointer}
     .icon img{width:80px;height:80px;transition:transform .25s}
@@ -36,7 +35,7 @@
 <body>
   <!-- Login -->
   <div class="card" id="loginCard">
-    <h1>🔐 NowGG Cloud(cre:meolazy,ducknovis)</h1>
+    <h1>🔐 NowGG Cloud</h1>
     <p style="margin:6px 0 16px;color:#ddd">Nhập key để truy cập</p>
     <input id="keyInput" type="password" placeholder="Nhập key..." autocomplete="off" />
     <button class="btn confirm" onclick="checkKey()">Xác nhận</button>
@@ -48,7 +47,6 @@
   <div class="card desktop" id="desktop">
     <h1 style="font-size:18px;color:var(--accent)">NowGG Cloud — Dashboard</h1>
     <div id="keyTimer">⏳ Key còn lại: --:--:--</div>
-    <div id="adminBadge">🔒 Admin Mode</div>
     <div class="icons">
       <div class="icon" onclick="openApp()">
         <img src="https://cms-cdn.now.gg/cms-media/2022/12/nowgg-full-logo.png" alt="App">
@@ -95,9 +93,8 @@
 
 <script>
 (function(){
-  const _0xA1="ilovead"; // key admin
-  const _0xA2=48*60*60*1000; // 2 ngày
-  let _0xA3=null;
+  const KEY_EXPIRE=48*60*60*1000; // 2 ngày
+  let timerInterval=null;
 
   // Redirect sang link4m mới
   window.copyKeyLink=function(){
@@ -112,40 +109,29 @@
     let e=document.getElementById("error");
     let n=Date.now();
 
-    if(i===_0xA1){
-      localStorage.setItem("isLoggedIn","true");
-      localStorage.setItem("isAdmin","true");
-      document.getElementById("loginCard").style.display="none";
-      document.getElementById("desktop").style.display="flex";
-      document.getElementById("adminBadge").style.display="block";
-      e.textContent="✅ Đăng nhập admin thành công!";
-      return;
-    }
-
     if(!k||!t){
       e.textContent="❌ Bạn chưa có key. Hãy lấy key từ Link4m.";
       return;
     }
-    if(n-parseInt(t)>_0xA2){
+    if(n-parseInt(t)>KEY_EXPIRE){
       e.textContent="⏳ Key đã hết hạn. Vui lòng lấy key mới.";
       localStorage.clear();return;
     }
     if(i===k){
       localStorage.setItem("isLoggedIn","true");
-      localStorage.removeItem("isAdmin");
       document.getElementById("loginCard").style.display="none";
       document.getElementById("desktop").style.display="flex";
-      _0xA4(parseInt(t));
+      startTimer(parseInt(t));
     }else{
       e.textContent="❌ Key sai!";
     }
   };
 
-  function _0xA4(t){
-    clearInterval(_0xA3);
-    _0xA3=setInterval(()=>{
+  function startTimer(t){
+    clearInterval(timerInterval);
+    timerInterval=setInterval(()=>{
       let n=Date.now();
-      let r=_0xA2-(n-t);
+      let r=KEY_EXPIRE-(n-t);
       if(r<=0){
         document.getElementById("keyTimer").textContent="⏳ Key đã hết hạn";
         window.logout();
@@ -160,10 +146,9 @@
 
   window.logout=function(){
     localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("isAdmin");
     document.getElementById("desktop").style.display="none";
     document.getElementById("loginCard").style.display="block";
-    clearInterval(_0xA3);
+    clearInterval(timerInterval);
   };
 
   // ✅ iframe uProxy
@@ -199,7 +184,6 @@
     const k=localStorage.getItem("myKey");
     const t=localStorage.getItem("myKeyTime");
     const l=localStorage.getItem("isLoggedIn");
-    const a=localStorage.getItem("isAdmin");
     const n=Date.now();
 
     if(code && visited==="true"){
@@ -210,24 +194,19 @@
       localStorage.setItem("isLoggedIn","true");
       document.getElementById("loginCard").style.display="none";
       document.getElementById("desktop").style.display="flex";
-      _0xA4(Date.now());
+      startTimer(Date.now());
       window.history.replaceState({},document.title,window.location.pathname);
       return;
     }
 
-    if(a==="true"&&l==="true"){
-      document.getElementById("loginCard").style.display="none";
-      document.getElementById("desktop").style.display="flex";
-      document.getElementById("adminBadge").style.display="block";
-      return;
-    }
     if(k&&t&&l==="true"){
-      if(n-parseInt(t)<_0xA2){
+      if(n-parseInt(t)<KEY_EXPIRE){
         document.getElementById("loginCard").style.display="none";
         document.getElementById("desktop").style.display="flex";
-        _0xA4(parseInt(t));
+        startTimer(parseInt(t));
       }else{localStorage.clear();}
     }
+
     setInterval(()=>{
       const s=document.createElement("div");
       s.className="snowflake";
