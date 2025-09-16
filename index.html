@@ -4,144 +4,220 @@
   <meta charset="utf-8" />
   <title>NowGG Cloud</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> 
   <style>
-    body { margin:0;font-family:sans-serif;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh; }
-    .card { background:rgba(0,0,0,0.6);padding:24px;border-radius:14px;max-width:420px;width:92%;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,0.6); }
-    h1 { margin-top:0;font-size:22px;color:#00ffcc;text-shadow:0 0 6px #00ffcc; }
-    button { margin:8px;padding:12px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer; }
-    .btn-link { background:linear-gradient(90deg,#00ffcc,#00ff66);color:#000; }
-    .btn-ghost { background:transparent;border:1px solid #aaa;color:#fff; }
-    #status { margin-top:10px;min-height:20px;color:#ffcc00;font-size:14px; }
-    #dashboard { display:none; }
-    iframe { width:100%;height:420px;border:none;margin-top:12px;display:none; }
-    #topbar{position:fixed;top:0;left:0;width:100%;height:44px;background:#000;display:none;align-items:center;justify-content:flex-end;padding-right:12px;z-index:50}
-    #topbar button{background:#ff4d4d;border:none;color:#fff;padding:6px 10px;border-radius:8px;cursor:pointer}
+    :root{--accent:#00ffcc;--accent-dark:#00ff66;--bg1:#3b073b;--bg2:#8b2245;--bg3:#c0392b}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Roboto',sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));background-size:300% 300%;animation:grad 12s ease infinite;color:#fff;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    .card{width:360px;background:rgba(0,0,0,0.6);padding:28px;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.6);text-align:center}
+    h1{margin:0 0 10px;font-size:20px;color:var(--accent);text-shadow:0 0 8px var(--accent)}
+    p.lead{margin:6px 0 16px;color:#ddd}
+    .btn{width:100%;padding:12px;border-radius:10px;border:none;cursor:pointer;font-weight:700;margin-top:8px;transition:transform .18s}
+    .btn:active{transform:translateY(1px)}
+    .btn-get{background:linear-gradient(90deg,#ffbb00,#ff6a00);color:#111}
+    .btn-check{background:linear-gradient(90deg,#00ffd1,#00d18a);color:#000}
+    .small{font-size:13px;color:#cfcfcf;margin-top:10px}
+    #status{min-height:22px;margin-top:12px;color:#ffeaa7}
+    .desktop{display:none;flex-direction:column;align-items:center;gap:14px}
+    .icons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+    .icon{width:96px;text-align:center;cursor:pointer}
+    .icon img{width:72px;height:72px;border-radius:10px;background:#fff;padding:6px}
+    #topbar{position:fixed;top:0;left:0;width:100%;height:46px;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:flex-end;padding-right:14px;z-index:60}
+    #topbar button{background:#ff4d4d;border:none;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer}
+    iframe{position:fixed;top:46px;left:0;width:100%;height:calc(100% - 46px);border:none;display:none;z-index:50}
+    @media (max-width:420px){.card{width:92%}.icon img{width:56px;height:56px}}
   </style>
 </head>
 <body>
-  <!-- Login -->
   <div class="card" id="loginCard">
     <h1>🔐 NowGG Cloud</h1>
-    <p>Bấm nút để vượt link và nhận quyền truy cập (2 ngày).</p>
-    <button class="btn-link" onclick="goLink()">🚀 Vượt link</button>
-    <button class="btn-ghost" onclick="checkLogin()">🔎 Kiểm tra trạng thái</button>
-    <div id="status"></div>
+    <p class="lead">Bấm "Lấy Key" để vượt link. Sau khi hoàn thành Link4m sẽ redirect về trang này và bạn sẽ được mở giao diện.</p>
+
+    <!-- REMOVED: input + confirm -->
+    <button class="btn btn-get" onclick="goLink()">🚀 Lấy Key</button>
+    <button class="btn btn-check" onclick="checkLogin()">🔎 Kiểm tra trạng thái</button>
+
+    <div id="status" class="small"></div>
+    <div class="small" style="margin-top:8px">Lưu ý: Key có hiệu lực 48 giờ (do server cấp). Nếu hết hạn, vui lòng Lấy Key lại.</div>
   </div>
 
-  <!-- Dashboard -->
-  <div class="card" id="dashboard">
-    <h1>📂 Dashboard</h1>
-    <button class="btn-link" onclick="openApp()">Mở App</button>
-    <button class="btn-ghost" onclick="openUpdate()">📢 Cập nhật</button>
-    <button class="btn-ghost" onclick="logout()">Đăng xuất</button>
-    <iframe id="appFrame"></iframe>
+  <div class="card desktop" id="desktop">
+    <h1 style="font-size:18px;color:var(--accent)">NowGG Cloud — Dashboard</h1>
+    <div id="keyTimer" class="small">⏳ Trạng thái: Đang kiểm tra...</div>
+
+    <div class="icons">
+      <div class="icon" onclick="openApp()">
+        <img src="https://cms-cdn.now.gg/cms-media/2022/12/nowgg-full-logo.png" alt="app">
+        <div class="small">Mở App</div>
+      </div>
+      <div class="icon" onclick="openUpdate()">
+        <img src="https://png.pngtree.com/png-clipart/20230508/original/pngtree-sticky-note-flat-icon-png-image_9150666.png" alt="update">
+        <div class="small">Cập nhật</div>
+      </div>
+      <div class="icon" onclick="logout()">
+        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828490.png" alt="logout">
+        <div class="small">Đăng xuất</div>
+      </div>
+    </div>
   </div>
 
-  <!-- Topbar for iframe -->
   <div id="topbar"><button onclick="closeApp()">Đóng</button></div>
+  <iframe id="appFrame" src=""></iframe>
 
-  <!-- Modal Update -->
-  <div id="updateModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-    background:rgba(0,0,0,0.7);z-index:100;align-items:center;justify-content:center;">
-    <div style="background:#222;padding:20px;border-radius:14px;max-width:360px;width:90%;color:#fff;box-shadow:0 6px 24px rgba(0,0,0,0.6);">
-      <h2 style="margin-top:0;color:#00ffcc;text-align:center;">📢 Cập nhật mới</h2>
-      <ul style="text-align:left;line-height:1.6;">
-        <li>⚡ Tối ưu hiệu năng khi chạy app.</li>
-        <li>🔒 Cải thiện bảo mật key.</li>
+  <!-- Update modal -->
+  <div id="updateModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:70;align-items:center;justify-content:center;">
+    <div style="background:#111;padding:18px;border-radius:12px;max-width:420px;width:92%;color:#fff;box-shadow:0 6px 24px rgba(0,0,0,0.6);">
+      <h3 style="margin:0 0 8px;color:var(--accent);text-align:center">📢 Cập nhật</h3>
+      <ul style="text-align:left;color:#ddd;line-height:1.6">
+        <li>⚡ Tối ưu hiệu năng</li>
+        <li>🔒 Kiểm tra server-side khi cấp quyền</li>
       </ul>
-      <button onclick="closeUpdate()" style="margin-top:12px;width:100%;padding:10px;border:none;border-radius:10px;background:#00ffcc;color:#000;font-weight:bold;cursor:pointer;">
-        Đóng
-      </button>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button style="flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#000;font-weight:700" onclick="closeUpdate()">Đóng</button>
+      </div>
     </div>
   </div>
 
 <script>
+/*
+  Flow:
+  - goLink() => set visited flag + redirect to Link4m
+  - When Link4m redirects back to site with ?code=XYZ, script sends POST /issue (credentials include)
+    to SERVER_URL. If server returns {ok:true} -> open dashboard.
+  - checkLogin() calls GET /app to verify cookie/session.
+  - No input field / no confirm button.
+*/
+
 const LINK4M = "https://link4m.com/qIzP1";
 const SERVER_URL = "https://nowgg-server.onrender.com";
 
-// Redirect sang link4m
+function setStatus(txt){
+  document.getElementById("status").textContent = txt || "";
+}
+
+// Redirect user to Link4m and set visited flag
 function goLink(){
-  localStorage.setItem("visitedLink","true");
+  try {
+    localStorage.setItem("visitedLink", "true");
+    // optionally save timestamp
+    localStorage.setItem("visitedTime", Date.now().toString());
+  } catch(e){}
   window.location.href = LINK4M;
 }
 
-// Gửi code về server để lấy cookie
+// Called when we have code returned from Link4m
 async function verifyCode(code){
-  document.getElementById("status").textContent = "⏳ Đang xác thực...";
+  setStatus("⏳ Đang xác thực code...");
   try {
     const res = await fetch(SERVER_URL + "/issue", {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code }),
-      credentials:"include"
+      credentials: "include" // important to receive HttpOnly cookie
     });
-    const data = await res.json();
-    if(data.ok){ showDashboard(); }
-    else { document.getElementById("status").textContent="❌ Xác thực thất bại"; }
-  } catch(e){
-    document.getElementById("status").textContent="❌ Lỗi kết nối server";
+    if(!res.ok){
+      const txt = await res.text().catch(()=>null);
+      setStatus("❌ Server: " + (txt || res.status));
+      return false;
+    }
+    const data = await res.json().catch(()=>({}));
+    if(data && data.ok){
+      setStatus("✅ Xác thực thành công. Mở dashboard...");
+      openDashboardAfterAuth();
+      return true;
+    } else {
+      setStatus("❌ Xác thực thất bại.");
+      return false;
+    }
+  } catch(err){
+    console.error(err);
+    setStatus("❌ Lỗi kết nối server.");
+    return false;
   }
 }
 
-// Kiểm tra trạng thái cookie
+// Check if session cookie is valid by calling protected /app
 async function checkLogin(){
-  document.getElementById("status").textContent="⏳ Đang kiểm tra...";
+  setStatus("⏳ Kiểm tra trạng thái...");
   try {
-    const res = await fetch(SERVER_URL + "/app",{ credentials:"include" });
-    if(res.ok){ showDashboard(); }
-    else { document.getElementById("status").textContent="⚠️ Phiên hết hạn, hãy vượt link lại"; }
+    const res = await fetch(SERVER_URL + "/app", { credentials: "include" });
+    if(res.ok){
+      setStatus("✅ Đã đăng nhập. Mở dashboard...");
+      openDashboardAfterAuth();
+    } else {
+      setStatus("⚠️ Chưa có phiên hợp lệ. Vui lòng Lấy Key.");
+    }
   } catch(e){
-    document.getElementById("status").textContent="❌ Không kết nối được server";
+    console.error(e);
+    setStatus("❌ Không thể kết nối server.");
   }
 }
 
-// Hiện dashboard
-function showDashboard(){
-  document.getElementById("loginCard").style.display="none";
-  document.getElementById("dashboard").style.display="block";
+function openDashboardAfterAuth(){
+  // hide login card, show dashboard, set keyTimer (server controls real expiry)
+  document.getElementById("loginCard").style.display = "none";
+  document.getElementById("desktop").style.display = "flex";
+  document.getElementById("keyTimer").textContent = "⏳ Phiên đã được cấp (48h)";
+  // option: auto-open iframe or let user click "Mở App"
 }
 
-// Mở App
+// iframe app open/close
 function openApp(){
-  const f=document.getElementById("appFrame");
-  f.style.display="block";
-  f.src="https://uproxy.online/ultraviolet/hvtrs8%2F-nmw%2Cge%2Fcprs-cnuqtgr%2Filc-9355%2Falwsvep.jtol";
-  document.getElementById("topbar").style.display="flex";
+  const f = document.getElementById("appFrame");
+  f.src = "https://uproxy.online/ultraviolet/hvtrs8%2F-nmw%2Cge%2Fcprs-cnuqtgr%2Filc-9355%2Falwsvep.jtol"; // your uProxy URL (change if needed)
+  f.style.display = "block";
+  document.getElementById("topbar").style.display = "flex";
 }
+
 function closeApp(){
-  const f=document.getElementById("appFrame");
-  f.src=""; f.style.display="none";
-  document.getElementById("topbar").style.display="none";
+  const f = document.getElementById("appFrame");
+  f.src = "";
+  f.style.display = "none";
+  document.getElementById("topbar").style.display = "none";
 }
 
-// Logout
+// Logout: call server to clear cookie, then show login
 async function logout(){
-  try{ await fetch(SERVER_URL+"/logout",{method:"POST",credentials:"include"});}catch(e){}
-  document.getElementById("dashboard").style.display="none";
-  document.getElementById("loginCard").style.display="block";
-  document.getElementById("status").textContent="✅ Đã đăng xuất.";
-  document.getElementById("appFrame").style.display="none";
-  document.getElementById("appFrame").src="";
+  try {
+    await fetch(SERVER_URL + "/logout", { method: "POST", credentials: "include" });
+  } catch(e){
+    console.warn("logout err", e);
+  }
+  document.getElementById("desktop").style.display = "none";
+  document.getElementById("loginCard").style.display = "block";
+  setStatus("✅ Đã đăng xuất.");
+  closeApp();
 }
 
-// Update modal
-function openUpdate(){ document.getElementById("updateModal").style.display="flex"; }
-function closeUpdate(){ document.getElementById("updateModal").style.display="none"; }
+function openUpdate(){ document.getElementById("updateModal").style.display = "flex"; }
+function closeUpdate(){ document.getElementById("updateModal").style.display = "none"; }
 
-// Khi load trang
-window.addEventListener("DOMContentLoaded",()=>{
-  const params=new URLSearchParams(window.location.search);
-  const code=params.get("code");
-  const visited=localStorage.getItem("visitedLink");
+// On load: if Link4m redirected back with ?code=XYZ and visited flag present => verify
+window.addEventListener("DOMContentLoaded", async ()=>{
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+  const visited = localStorage.getItem("visitedLink");
 
-  if(code && visited==="true"){
+  if(code && visited === "true"){
+    // once used, remove flag
     localStorage.removeItem("visitedLink");
-    verifyCode(code);
-    const cleanUrl=window.location.origin+window.location.pathname;
-    window.history.replaceState({},document.title,cleanUrl);
-  } else {
-    checkLogin(); // auto check trạng thái khi load
+    localStorage.removeItem("visitedTime");
+    // verify with server
+    const ok = await verifyCode(code);
+    // clean url (remove ?code)
+    try {
+      const clean = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, clean);
+    } catch(e){}
+    if(!ok){
+      // failed -> leave on login
+    }
+    return;
   }
+
+  // otherwise auto-check if already have valid session cookie
+  await checkLogin();
 });
 </script>
 </body>
